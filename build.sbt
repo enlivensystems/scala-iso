@@ -12,10 +12,6 @@ import sbtrelease.ReleasePlugin._
 import ReleaseStateTransformations._
 import com.typesafe.sbt.pgp.PgpKeys
 
-// *****************************************************************************
-// Projects
-// *****************************************************************************
-
 lazy val `scala-iso` =
   project
     .in(file("."))
@@ -29,23 +25,11 @@ lazy val `scala-iso` =
       )
     )
 
-// *****************************************************************************
-// Library dependencies
-// *****************************************************************************
-
 lazy val library =
   new {
-    object Version {
-      val scalaCheck = "1.13.4"
-      val scalaTest  = "3.0.1"
-    }
-    val scalaCheck = "org.scalacheck" %% "scalacheck" % Version.scalaCheck
-    val scalaTest  = "org.scalatest"  %% "scalatest"  % Version.scalaTest
+    val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.13.4"
+    val scalaTest  = "org.scalatest" %% "scalatest" % "3.3.0-SNAP3" % "test"
 }
-
-// *****************************************************************************
-// Settings
-// *****************************************************************************        |
 
 lazy val settings =
   commonSettings ++
@@ -54,9 +38,8 @@ lazy val settings =
 
 lazy val commonSettings =
   Seq(
-    organization := "com.vitorsvieira",
-    scalaVersion := "2.12.1",
-    crossScalaVersions := Seq("2.11.8", scalaVersion.value),
+    organization := "systems.enliven",
+    scalaVersion := "2.13.6",
     crossVersion := CrossVersion.binary,
     mappings.in(Compile, packageBin) +=
       baseDirectory.in(ThisBuild).value / "LICENSE" -> "LICENSE",
@@ -74,13 +57,8 @@ lazy val commonSettings =
       "-Xlint",
       "-Xlint:-nullary-unit",
       "-Ywarn-unused",
-      "-Ywarn-unused-import",
       "-Ywarn-dead-code",
       "-Ywarn-value-discard"
-    ),
-    javacOptions ++= Seq(
-      "-source", "1.8",
-      "-target", "1.8"
     ),
     unmanagedSourceDirectories.in(Compile) :=
       Seq(scalaSource.in(Compile).value),
@@ -98,105 +76,25 @@ lazy val commonSettings =
     wartremoverWarnings ++= Warts.unsafe
 )
 
-lazy val gitSettings =
-  Seq(
-    git.useGitDescribe := true
-  )
-
-
-lazy val headerSettings =
-  Seq(
-    headers := Map(
-      "scala" -> Apache2_0("2017", "Vitor S. Vieira"),
-      "conf"  -> Apache2_0("2017", "Vitor S. Vieira", "#")
-    )
-  )
-lazy val dontPublishSettings = Seq(
-  //publishSigned := (),
-  publish := (),
-  publishLocal := (),
-  publishArtifact := false
-)
-
 lazy val publishSettings = Seq(
-  credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-  publishTo <<= version.apply {
-    v =>
-    val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT")) {
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    } else {
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    }
-  },
-
-  externalResolvers <<= resolvers map { rs =>
-  Resolver.withDefaultResolvers(rs, mavenCentral = true)
-  },
-
-  // Release settings
-  publishMavenStyle := true,
-  pomIncludeRepository := { _ => false },
-  releaseCrossBuild             := true,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-  publishMavenStyle             := true,
-  publishArtifact in Test       := false,
-  pomExtra := {
-    <url>https://github.com/vitorsvieira/scala-iso</url>
-      <licenses>
-        <license>
-          <name>Apache 2</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-      </licenses>
-      <scm>
-        <url>git@github.com:vitorsvieira/scala-iso.git</url>
-        <connection>scm:git:git@github.com:vitorsvieira/scala-iso.git</connection>
-      </scm>
-      <developers>
-        <developer>
-          <id>vitorsvieira</id>
-          <name>Vitor Vieira</name>
-          <url>http://github.com/vitorsvieira</url>
-        </developer>
-      </developers>
-  },
-
-  releaseProcess := Seq[ReleaseStep](
-    checkSnapshotDependencies,
-    inquireVersions,
-    runClean,
-    runTest,
-    setReleaseVersion,
-    commitReleaseVersion,
-    tagRelease,
-    publishArtifacts,
-    setNextVersion,
-    commitNextVersion,
-    pushChanges
-  )
+  /**
+    * Do not pack sources in compile tasks.
+    */
+  Compile / doc / sources := Seq.empty,
+  /**
+    * Disabling Scala and Java documentation in publishing tasks.
+    */
+  Compile / packageDoc / publishArtifact := false,
+  Test / packageDoc / publishArtifact := false,
+  Test / packageBin / publishArtifact := true,
+  Test / packageSrc / publishArtifact := true,
+  publishConfiguration := publishConfiguration.value.withOverwrite(true),
+  publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true),
+  publishTo := Some(
+    "Artifactory Realm".at(s"https://central.enliven.systems/artifactory/sbt-release/")
+  ),
+  credentials += Credentials(Path.userHome / ".sbt" / ".credentials.central"),
 )
 
-//get the tools.jar JDK dependency
-val JavaTools = List[Option[String]] (
-  // manual
-  sys.env.get("JDK_HOME"),
-  sys.env.get("JAVA_HOME"),
-  // osx
-  try Some("/usr/libexec/java_home".!!.trim)
-  catch {
-    case _: Throwable => None
-  },
-  // fallback
-  sys.props.get("java.home").map(new File(_).getParent),
-  sys.props.get("java.home")
-).flatten.map { n =>
-new File(n + "/lib/tools.jar")
-}.find(_.exists).getOrElse (
-  throw new FileNotFoundException (
-    """Could not automatically find the JDK/lib/tools.jar.
-      |You must explicitly set JDK_HOME or JAVA_HOME.""".stripMargin
-  )
-)
 parallelExecution in Test := false
 fork in Test := true
