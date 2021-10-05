@@ -1,35 +1,19 @@
-/*
- * Copyright 2017 Vitor S. Vieira
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package systems.enliven.iso
 
-package com.vitorsvieira.iso
-
-import com.vitorsvieira.iso.ISOCountry.ISOCountry
+import systems.enliven.iso.ISOCountry.ISOCountry
 
 /**
- * *
- * Country calling codes or country dial in codes are telephone dialing prefixes
- * for the member countries of the International Telecommunication Union (ITU).
- * They are defined by the ITU-T in standards E.123 and E.164.
- */
+  * *
+  * Country calling codes or country dial in codes are telephone dialing prefixes
+  * for the member countries of the International Telecommunication Union (ITU).
+  * They are defined by the ITU-T in standards E.123 and E.164.
+  */
 object CountryCallingCode extends Enum {
 
   sealed class EnumVal(
-    val value:         String,
-    val numericalCode: Int,
-    val countries:     ISOCountry*
+      val value: String,
+      val numericalCode: Int,
+      val countries: ISOCountry*
   ) extends Value
 
   type CountryCallingCode = EnumVal
@@ -293,33 +277,33 @@ object CountryCallingCode extends Enum {
   // format: ON
 
   /**
-   * Retrieves CountryCallingCode based on calling code.
-   *
-   * @param phoneCode Country code, ie. 1, 33
-   * @return CountryCallingCode
-   */
+    * Retrieves CountryCallingCode based on calling code.
+    *
+    * @param phoneCode Country code, ie. 1, 33
+    * @return CountryCallingCode
+    */
   def apply(phoneCode: String): CountryCallingCode =
     CountryCallingCode.values.find(phoneCode == _.toString) match {
       case Some(code) ⇒ code
-      case None       ⇒ throw new ParseException(s"Invalid value '$phoneCode' for CountryCallingCode")
+      case None ⇒ throw new ParseException(s"Invalid value '$phoneCode' for CountryCallingCode")
     }
 
   /**
-   * Retrieves Option[CountryCallingCode] based on calling code.
-   *
-   * @param phoneCode Country code, ie. 1, 33
-   * @return Option[ISOCouCountryCallingCodentry]
-   */
+    * Retrieves Option[CountryCallingCode] based on calling code.
+    *
+    * @param phoneCode Country code, ie. 1, 33
+    * @return Option[ISOCouCountryCallingCodentry]
+    */
   def from(phoneCode: String): Option[CountryCallingCode] =
     CountryCallingCode.values.find(phoneCode == _.toString)
 
   /**
-   * Retrieves CountryCallingCode based on numeric code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param numericalCode Numeric code, ie. 1, 33
-   * @return CountryCallingCode
-   */
+    * Retrieves CountryCallingCode based on numeric code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param numericalCode Numeric code, ie. 1, 33
+    * @return CountryCallingCode
+    */
   def apply(numericalCode: Int): CountryCallingCode =
     CountryCallingCode.values.find(numericalCode == _.numericalCode) match {
       case Some(country) ⇒ country
@@ -328,35 +312,35 @@ object CountryCallingCode extends Enum {
     }
 
   /**
-   * Retrieves Option[CountryCallingCode] based on numeric code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param numericalCode Numeric code, ie. 1, 3
-   * @return Option[CountryCallingCode]
-   */
+    * Retrieves Option[CountryCallingCode] based on numeric code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param numericalCode Numeric code, ie. 1, 3
+    * @return Option[CountryCallingCode]
+    */
   def from(numericalCode: Int): Option[CountryCallingCode] =
     CountryCallingCode.values.find(numericalCode == _.numericalCode)
 
   /**
-   * Retrieves CountryCallingCode using ISOCountry.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param country ISOCountry.JAPAN, ISOCountry("US")
-   * @return Option[CountryCallingCode]
-   */
+    * Retrieves CountryCallingCode using ISOCountry.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param country ISOCountry.JAPAN, ISOCountry("US")
+    * @return Option[CountryCallingCode]
+    */
   def apply(country: ISOCountry): CountryCallingCode =
     CountryCallingCode.values.find(_.countries.contains(country)) match {
       case Some(currency) ⇒ currency
-      case _              ⇒ throw new ParseException(s"Invalid country '$country' for CountryCallingCode")
+      case _ ⇒ throw new ParseException(s"Invalid country '$country' for CountryCallingCode")
     }
 
   /**
-   * Retrieves Option[CountryCallingCode] using ISOCountry.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param country ISOCountry.JAPAN, ISOCountry("US")
-   * @return Option[CountryCallingCode]
-   */
+    * Retrieves Option[CountryCallingCode] using ISOCountry.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param country ISOCountry.JAPAN, ISOCountry("US")
+    * @return Option[CountryCallingCode]
+    */
   def from(country: ISOCountry): Option[CountryCallingCode] =
     CountryCallingCode.values.find(_.countries.contains(country))
 }

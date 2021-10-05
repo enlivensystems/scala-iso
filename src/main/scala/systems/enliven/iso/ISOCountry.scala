@@ -1,42 +1,26 @@
-/*
- * Copyright 2017 Vitor S. Vieira
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package systems.enliven.iso
 
-package com.vitorsvieira.iso
-
-import com.vitorsvieira.iso.ISOContinent.ISOContinent
+import systems.enliven.iso.ISOContinent.ISOContinent
 
 import scala.collection.immutable.Seq
 
 /**
- * *
- * ISO 3166-1
- * ISO 3166 is the International Standard for country codes and codes for their subdivisions.
- * Alpha-2 country codes can be represented either as a two-letter code.
- * Alpha-3 country code can be represented either as a three-letter code.
- * <a href="http://www.iso.org/iso/home/standards/country_codes.htm">International Organization for Standardization website</a>.
- * <a href="http://unstats.un.org/unsd/methods/m49/m49alpha.htm">United Nations Statistics Department</a>.
- */
+  * *
+  * ISO 3166-1
+  * ISO 3166 is the International Standard for country codes and codes for their subdivisions.
+  * Alpha-2 country codes can be represented either as a two-letter code.
+  * Alpha-3 country code can be represented either as a three-letter code.
+  * <a href="http://www.iso.org/iso/home/standards/country_codes.htm">International Organization for Standardization website</a>.
+  * <a href="http://unstats.un.org/unsd/methods/m49/m49alpha.htm">United Nations Statistics Department</a>.
+  */
 object ISOCountry extends Enum {
 
   sealed class EnumVal(
-    val value:         String,
-    val numericalCode: Int,
-    val englishName:   String,
-    val alpha3Code:    String,
-    val continent:     ISOContinent
+      val value: String,
+      val numericalCode: Int,
+      val englishName: String,
+      val alpha3Code: String,
+      val continent: ISOContinent
   ) extends Value
 
   type ISOCountry = EnumVal
@@ -293,58 +277,58 @@ object ISOCountry extends Enum {
   // format: ON
 
   /**
-   * Retrieves ISOCountry based on alpha-2 code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param countryCode Country code, ie. US, CN
-   * @return ISOCountry
-   */
+    * Retrieves ISOCountry based on alpha-2 code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param countryCode Country code, ie. US, CN
+    * @return ISOCountry
+    */
   def apply(countryCode: String): ISOCountry =
     ISOCountry.values.find(countryCode == _.toString) match {
       case Some(country) ⇒ country
-      case _             ⇒ throw new ParseException(s"Invalid alpha-2 code '$countryCode' for ISOCountry")
+      case _ ⇒ throw new ParseException(s"Invalid alpha-2 code '$countryCode' for ISOCountry")
     }
 
   /**
-   * Retrieves Option[ISOCountry] based on alpha-2 code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param countryCode Country code, ie. US, CN
-   * @return Option[ISOCountry]
-   */
+    * Retrieves Option[ISOCountry] based on alpha-2 code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param countryCode Country code, ie. US, CN
+    * @return Option[ISOCountry]
+    */
   def from(countryCode: String): Option[ISOCountry] =
     ISOCountry.values.find(countryCode == _.toString)
 
   /**
-   * Retrieves ISOCountry based on numeric code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param numericCode Numeric code, ie. 840, 826
-   * @return ISOCountry
-   */
+    * Retrieves ISOCountry based on numeric code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param numericCode Numeric code, ie. 840, 826
+    * @return ISOCountry
+    */
   def apply(numericCode: Int): ISOCountry =
     ISOCountry.values.find(numericCode == _.numericalCode) match {
       case Some(country) ⇒ country
-      case _             ⇒ throw new ParseException(s"Invalid numeric code '$numericCode' for ISOCountry")
+      case _ ⇒ throw new ParseException(s"Invalid numeric code '$numericCode' for ISOCountry")
     }
 
   /**
-   * Retrieves Option[ISOCountry] based on numeric code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param numericCode Numeric code, ie. 840, 826
-   * @return Option[ISOCountry]
-   */
+    * Retrieves Option[ISOCountry] based on numeric code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param numericCode Numeric code, ie. 840, 826
+    * @return Option[ISOCountry]
+    */
   def from(numericCode: Int): Option[ISOCountry] =
     ISOCountry.values.find(numericCode == _.numericalCode)
 
   /**
-   * Retrieves Seq[ISOCountry] based on ISOContinent.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param continent ISOContinent.NORTH_AMERICA, ISOContinent.ASIA
-   * @return Option[ISOCountry]
-   */
+    * Retrieves Seq[ISOCountry] based on ISOContinent.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param continent ISOContinent.NORTH_AMERICA, ISOContinent.ASIA
+    * @return Option[ISOCountry]
+    */
   def fromContinent(continent: ISOContinent): Vector[ISOCountry] =
     ISOCountry.values.filter(_.continent == continent)
 }

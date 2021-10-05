@@ -1,100 +1,118 @@
-import java.io.FileNotFoundException
+import sbt.Tests.{ Group, SubProcess }
+import sbtrelease.ReleaseStateTransformations._
+import sbtrelease.{ versionFormatError, Version }
 
-import sbt._
-import Keys._
-import de.heikoseeberger.sbtheader.HeaderPattern
-import de.heikoseeberger.sbtheader.license.Apache2_0
-import scalariform.formatter.preferences._
-import com.typesafe.sbt.SbtScalariform
-import sbtrelease._
-import ReleaseTransformations._
-import sbtrelease.ReleasePlugin._
-import ReleaseStateTransformations._
-import com.typesafe.sbt.pgp.PgpKeys
-
-lazy val `scala-iso` =
-  project
-    .in(file("."))
-    .enablePlugins(AutomateHeaderPlugin, GitVersioning)
-    .settings(settings)
-    .settings(publishSettings: _*)
-    .settings(
-      libraryDependencies ++= Seq(
-        library.scalaCheck % Test,
-        library.scalaTest  % Test
-      )
-    )
-
-lazy val library =
-  new {
-    val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.13.4"
-    val scalaTest  = "org.scalatest" %% "scalatest" % "3.3.0-SNAP3" % "test"
-}
-
-lazy val settings =
-  commonSettings ++
-  gitSettings ++
-  headerSettings
-
-lazy val commonSettings =
-  Seq(
-    organization := "systems.enliven",
-    scalaVersion := "2.13.6",
-    crossVersion := CrossVersion.binary,
-    mappings.in(Compile, packageBin) +=
-      baseDirectory.in(ThisBuild).value / "LICENSE" -> "LICENSE",
-    scalacOptions ++= Seq(
-      "-unchecked",
-      "-deprecation",
-      "-encoding", "utf8",
-      "-feature",
-      "-explaintypes",
-      "-target:jvm-1.8",
-      "-language:_",
-      "-Ydelambdafy:method",
-      "-Xcheckinit",
-      "-Xfuture",
-      "-Xlint",
-      "-Xlint:-nullary-unit",
-      "-Ywarn-unused",
-      "-Ywarn-dead-code",
-      "-Ywarn-value-discard"
-    ),
-    unmanagedSourceDirectories.in(Compile) :=
-      Seq(scalaSource.in(Compile).value),
-    unmanagedSourceDirectories.in(Test) :=
-      Seq(scalaSource.in(Test).value),
-    SbtScalariform.autoImport.scalariformPreferences := SbtScalariform.autoImport.scalariformPreferences.value
-      .setPreference(AlignSingleLineCaseStatements, true)
-      .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
-      .setPreference(DoubleIndentClassDeclaration, true)
-      .setPreference(RewriteArrowSymbols, true)
-      .setPreference(AlignParameters, true)
-      .setPreference(AlignArguments, true)
-      .setPreference(DoubleIndentClassDeclaration, true)
-      .setPreference(DanglingCloseParenthesis, Preserve),
-    wartremoverWarnings ++= Warts.unsafe
+makePomConfiguration := makePomConfiguration.value.withConfigurations(
+  Configurations.defaultMavenConfigurations
 )
-
-lazy val publishSettings = Seq(
-  /**
-    * Do not pack sources in compile tasks.
-    */
-  Compile / doc / sources := Seq.empty,
-  /**
-    * Disabling Scala and Java documentation in publishing tasks.
-    */
-  Compile / packageDoc / publishArtifact := false,
-  Test / packageDoc / publishArtifact := false,
-  Test / packageBin / publishArtifact := true,
-  Test / packageSrc / publishArtifact := true,
+lazy val commonSettings = Seq(
+  startYear := Some(2021),
+  headerMappings := headerMappings.value + (HeaderFileType.scala -> HeaderCommentStyle.cStyleBlockComment),
+  headerLicense := Some(
+    HeaderLicense.Custom(
+      """|MIT License
+         |
+         |Copyright (c) 2021 Enliven Systems Kft.
+         |
+         |Permission is hereby granted, free of charge, to any person obtaining a copy
+         |of this software and associated documentation files (the "Software"), to deal
+         |in the Software without restriction, including without limitation the rights
+         |to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+         |copies of the Software, and to permit persons to whom the Software is
+         |furnished to do so, subject to the following conditions:
+         |
+         |The above copyright notice and this permission notice shall be included in all
+         |copies or substantial portions of the Software.
+         |
+         |THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+         |IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+         |FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+         |AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+         |LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+         |OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+         |SOFTWARE.
+         |""".stripMargin
+    )
+  ),
+  headerSources / excludeFilter := HiddenFileFilter || "*Excluded.scala",
+  headerResources / excludeFilter := HiddenFileFilter || "*.xml",
+  organizationName := "Enliven Systems Kft.",
+  organization := "systems.enliven.iso",
+  scalaVersion := "2.13.6",
+  semanticdbEnabled := true,
+  semanticdbVersion := scalafixSemanticdb.revision,
+  addCompilerPlugin(scalafixSemanticdb),
+  scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.5.0",
+  scalacOptions ++= List(
+    "-Yrangepos",
+    "-encoding",
+    "UTF-8",
+    "-deprecation",
+    "-feature",
+    "-unchecked",
+    "-language:implicitConversions",
+    "-language:postfixOps"
+  ),
+  releaseVersionBump := sbtrelease.Version.Bump.Next,
+  releaseIgnoreUntrackedFiles := true,
+  releaseVersion := { ver =>
+    Version(ver)
+      .map(_.withoutQualifier.string)
+      .getOrElse(versionFormatError(ver))
+  },
+  releaseNextVersion := { ver =>
+    Version(ver)
+      .map(_.bump(releaseVersionBump.value).withoutQualifier.string)
+      .getOrElse(versionFormatError(ver))
+  },
+  releaseProcess := Seq[ReleaseStep](
+    inquireVersions,
+    setReleaseVersion,
+    commitReleaseVersion,
+    setNextVersion,
+    commitNextVersion,
+    pushChanges
+  ),
+  fork := true,
+  IntegrationTest / fork := true,
+  Test / fork := true,
+  Test / testForkedParallel := true,
+  IntegrationTest / testForkedParallel := true,
+  Global / concurrentRestrictions := Seq(Tags.limitAll(6)),
+  Test / parallelExecution := true,
+  Test / testGrouping := (Test / testGrouping).value.flatMap { group =>
+    group.tests.map(
+      test => Group(test.name, Seq(test), SubProcess(ForkOptions()))
+    )
+  },
+  concurrentRestrictions := Seq(Tags.limit(Tags.ForkedTestGroup, 6)),
+  Test / logLevel := Level.Info,
   publishConfiguration := publishConfiguration.value.withOverwrite(true),
   publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true),
   publishTo := Some(
     "Artifactory Realm".at(s"https://central.enliven.systems/artifactory/sbt-release/")
   ),
   credentials += Credentials(Path.userHome / ".sbt" / ".credentials.central"),
+  resolvers ++= Seq(
+    "Maven Central".at("https://repo1.maven.org/maven2/")
+  ),
+  Test / testOptions += Tests.Setup(
+    () =>
+      System.setProperty(
+        "log4j.configuration",
+        s"file:///${baseDirectory.value.getAbsolutePath}/../common/src/test/resources/log4j2.properties"
+    )
+  ),
+  Test / packageBin / publishArtifact := true,
+  Test / packageSrc / publishArtifact := true,
+  Compile / packageDoc / publishArtifact := false,
+  libraryDependencies ++= Seq(
+    "org.scalacheck" %% "scalacheck" % "1.15.4",
+    "org.scalatest" %% "scalatest" % "3.3.0-SNAP3" % "test"
+  )
 )
 
-parallelExecution in Test := false
-fork in Test := true
+lazy val `scala-iso` =
+  project
+    .in(file("."))
+    .settings(commonSettings)

@@ -1,39 +1,23 @@
-/*
- * Copyright 2017 Vitor S. Vieira
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package systems.enliven.iso
 
-package com.vitorsvieira.iso
-
-import com.vitorsvieira.iso.ISOCountry.ISOCountry
+import systems.enliven.iso.ISOCountry.ISOCountry
 
 /**
- * ISO 4217 is the International Standard for currency codes.
- * The most recent edition is ISO 4217:2015 updated in January/2017.
- * Up-to-date list can be found for free on the
- * <a href="http://www.iso.org/iso/home/standards/currency_codes.htm">
- *   International Organization for Standardization website</a>.
- *
- * @see <a href="http://www.iso.org/iso/home/standards/currency_codes.htm">
- *        http://www.iso.org/iso/home/standards/currency_codes.htm</a>
- */
+  * ISO 4217 is the International Standard for currency codes.
+  * The most recent edition is ISO 4217:2015 updated in January/2017.
+  * Up-to-date list can be found for free on the
+  * <a href="http://www.iso.org/iso/home/standards/currency_codes.htm">
+  *   International Organization for Standardization website</a>.
+  *
+  * @see <a href="http://www.iso.org/iso/home/standards/currency_codes.htm">
+  *        http://www.iso.org/iso/home/standards/currency_codes.htm</a>
+  */
 object ISOCurrency extends Enum {
   sealed class EnumVal(
-    val value:         String,
-    val numericalCode: Int,
-    val minorUnit:     Int,
-    val countries:     ISOCountry*
+      val value: String,
+      val numericalCode: Int,
+      val minorUnit: Int,
+      val countries: ISOCountry*
   ) extends Value
 
   type ISOCurrency = EnumVal
@@ -399,70 +383,71 @@ object ISOCurrency extends Enum {
   // format: ON
 
   /**
-   * Retrieves ISOCurrency based on currency code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param currencyCode Currency code, ie. USD, CAD
-   * @return CountryCallingCode
-   */
+    * Retrieves ISOCurrency based on currency code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param currencyCode Currency code, ie. USD, CAD
+    * @return CountryCallingCode
+    */
   def apply(currencyCode: String): ISOCurrency =
     ISOCurrency.values.find(currencyCode == _.toString) match {
       case Some(currency) ⇒ currency
-      case _              ⇒ throw new ParseException(s"Invalid currency code '$currencyCode' for ISOCurrency")
+      case _ ⇒ throw new ParseException(s"Invalid currency code '$currencyCode' for ISOCurrency")
     }
 
   /**
-   * Retrieves Option[ISOCurrency] based on currency code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param currencyCode Currency code, ie. USD, CAD
-   * @return CountryCallingCode
-   */
+    * Retrieves Option[ISOCurrency] based on currency code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param currencyCode Currency code, ie. USD, CAD
+    * @return CountryCallingCode
+    */
   def from(currencyCode: String): Option[ISOCurrency] =
     ISOCurrency.values.find(currencyCode == _.toString)
 
   /**
-   * Retrieves ISOCurrency using ISOCountry.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param country ISOCountry.JAPAN, ISOCountry("US")
-   * @return Option[CountryCallingCode]
-   */
+    * Retrieves ISOCurrency using ISOCountry.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param country ISOCountry.JAPAN, ISOCountry("US")
+    * @return Option[CountryCallingCode]
+    */
   def apply(country: ISOCountry): ISOCurrency =
     ISOCurrency.values.find(_.countries.contains(country)) match {
       case Some(currency) ⇒ currency
-      case _              ⇒ throw new ParseException(s"Invalid country '$country' for ISOCurrency")
+      case _ ⇒ throw new ParseException(s"Invalid country '$country' for ISOCurrency")
     }
 
   /**
-   * Retrieves Option[ISOCurrency] using ISOCountry.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param country ISOCountry.JAPAN, ISOCountry("US")
-   * @return Option[CountryCallingCode]
-   */
+    * Retrieves Option[ISOCurrency] using ISOCountry.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param country ISOCountry.JAPAN, ISOCountry("US")
+    * @return Option[CountryCallingCode]
+    */
   def from(country: ISOCountry): Option[ISOCurrency] =
     ISOCurrency.values.find(_.countries.contains(country))
 
   /**
-   * Retrieves ISOCurrency using numerical code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param numericalCode ie. 840, 392
-   * @return Option[CountryCallingCode]
-   */
+    * Retrieves ISOCurrency using numerical code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param numericalCode ie. 840, 392
+    * @return Option[CountryCallingCode]
+    */
   def apply(numericalCode: Int): ISOCurrency =
     ISOCurrency.values.find(_.numericalCode == numericalCode) match {
       case Some(currency) ⇒ currency
-      case _              ⇒ throw new ParseException(s"Invalid numeric code '$numericalCode' for ISOCurrency")
+      case _ ⇒ throw new ParseException(s"Invalid numeric code '$numericalCode' for ISOCurrency")
     }
+
   /**
-   * Retrieves Option[ISOCurrency] using numerical code.
-   * https://www.iso.org/obp/ui/#search
-   *
-   * @param numericalCode ie. 840, 392
-   * @return Option[CountryCallingCode]
-   */
+    * Retrieves Option[ISOCurrency] using numerical code.
+    * https://www.iso.org/obp/ui/#search
+    *
+    * @param numericalCode ie. 840, 392
+    * @return Option[CountryCallingCode]
+    */
   def from(numericalCode: Int): Option[ISOCurrency] =
     ISOCurrency.values.find(_.numericalCode == numericalCode)
 }

@@ -1,26 +1,9 @@
-/*
- * Copyright 2017 Vitor S. Vieira
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package systems.enliven.iso
 
-package com.vitorsvieira.iso
+import org.scalatest.wordspec.AnyWordSpec
+import systems.enliven.iso.ISOCountry.ISOCountry
 
-import org.scalatest._
-import Matchers._
-import com.vitorsvieira.iso.ISOCountry.ISOCountry
-
-class ISOCountrySpec extends WordSpec {
+class ISOCountrySpec extends AnyWordSpec {
 
   "ISOCountry enum object" should {
 
@@ -57,34 +40,37 @@ class ISOCountrySpec extends WordSpec {
     }
 
     "return list of ISOCountry based on ISOContinent" in {
-      assert(ISOCountry.fromContinent(ISOContinent.OCEANIA) ==
-        Vector.apply[ISOCountry](
-          ISOCountry("AS"),
-          ISOCountry("AU"),
-          ISOCountry("CK"),
-          ISOCountry("FJ"),
-          ISOCountry("PF"),
-          ISOCountry("GU"),
-          ISOCountry("KI"),
-          ISOCountry("MH"),
-          ISOCountry("FM"),
-          ISOCountry("NR"),
-          ISOCountry("NC"),
-          ISOCountry("NZ"),
-          ISOCountry("NU"),
-          ISOCountry("NF"),
-          ISOCountry("MP"),
-          ISOCountry("PW"),
-          ISOCountry("PG"),
-          ISOCountry("PN"),
-          ISOCountry("WS"),
-          ISOCountry("SB"),
-          ISOCountry("TK"),
-          ISOCountry("TO"),
-          ISOCountry("TV"),
-          ISOCountry("UM"),
-          ISOCountry("VU"),
-          ISOCountry("WF")))
+      assert(
+        ISOCountry.fromContinent(ISOContinent.OCEANIA) ==
+          Vector.apply[ISOCountry](
+            ISOCountry("AS"),
+            ISOCountry("AU"),
+            ISOCountry("CK"),
+            ISOCountry("FJ"),
+            ISOCountry("PF"),
+            ISOCountry("GU"),
+            ISOCountry("KI"),
+            ISOCountry("MH"),
+            ISOCountry("FM"),
+            ISOCountry("NR"),
+            ISOCountry("NC"),
+            ISOCountry("NZ"),
+            ISOCountry("NU"),
+            ISOCountry("NF"),
+            ISOCountry("MP"),
+            ISOCountry("PW"),
+            ISOCountry("PG"),
+            ISOCountry("PN"),
+            ISOCountry("WS"),
+            ISOCountry("SB"),
+            ISOCountry("TK"),
+            ISOCountry("TO"),
+            ISOCountry("TV"),
+            ISOCountry("UM"),
+            ISOCountry("VU"),
+            ISOCountry("WF")
+          )
+      )
     }
 
     "return ISOCountry numericalCode property" in {

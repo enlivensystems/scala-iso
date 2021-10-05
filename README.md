@@ -1,20 +1,20 @@
 scala-iso
 =========
 
-[![Build Status](https://travis-ci.org/vitorsvieira/scala-iso.svg?branch=master)](https://travis-ci.org/vitorsvieira/scala-iso)
-[![Software License](https://img.shields.io/badge/license-Apache%202-brightgreen.svg?style=flat)](LICENSE)
-[![Maven Central](https://img.shields.io/maven-central/v/com.vitorsvieira/scala-iso_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/com.vitorsvieira/scala-iso_2.12)
+Note: This is a reiteration of [https://github.com/vitorsvieira/scala-iso],
+but made available for Scala 2.13+.
 
 ## Motivation
 
   - One stop shop for ISO related types.
+  - Be available (only) for Scala 2.13+.
 
 ## Installation
 
 To get started with SBT, simply add the following to your `build.sbt` or `Build.scala` file:
 
 ``` scala   
-libraryDependencies += "com.vitorsvieira" %% "scala-iso" % "0.1.2"
+libraryDependencies += "systems.enliven" %% "scala-iso" % "0.2.0"
 ```
 
 ## How to use
@@ -22,7 +22,7 @@ libraryDependencies += "com.vitorsvieira" %% "scala-iso" % "0.1.2"
 The easiest way to use the types available is just adding the following import statement:
  
 ```scala
-import com.vitorsvieira.iso._
+import systems.enliven.iso._
 ```
 
 ### ISOCountry

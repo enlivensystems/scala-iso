@@ -1,34 +1,5 @@
-# sbt
-lib_managed
-project/project
+.bsp
+.idea/
 target
-
-# Worksheets (Eclipse or IntelliJ)
-*.sc
-
-# Eclipse
-.cache*
-.classpath
-.project
-.scala_dependencies
-.settings
-.target
-.worksheet
-
-# IntelliJ
-.idea
-
-# ENSIME
-.ensime
-.ensime_lucene
-.ensime_cache
-
-# Mac
-.DS_Store
-
-# Akka Persistence
-journal
-snapshots
-
-# Log files
-*.log
+project/target
+project/project
