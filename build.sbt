@@ -44,7 +44,7 @@ lazy val commonSettings = Seq(
   semanticdbVersion := scalafixSemanticdb.revision,
   addCompilerPlugin(scalafixSemanticdb),
   scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.5.0",
-  scalafixScalaBinaryVersion := "2.13",
+  scalafixScalaBinaryVersion := "2.13.6",
   scalacOptions ++= List(
     "-Yrangepos",
     "-encoding",
