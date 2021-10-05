@@ -2,8 +2,6 @@ package systems.enliven.iso
 
 import systems.enliven.iso.ISOContinent.ISOContinent
 
-import scala.collection.immutable.Seq
-
 /**
   * *
   * ISO 3166-1
@@ -16,12 +14,13 @@ import scala.collection.immutable.Seq
 object ISOCountry extends Enum {
 
   sealed class EnumVal(
-      val value: String,
-      val numericalCode: Int,
-      val englishName: String,
-      val alpha3Code: String,
-      val continent: ISOContinent
-  ) extends Value
+    val value: String,
+    val numericalCode: Int,
+    val englishName: String,
+    val alpha3Code: String,
+    val continent: ISOContinent
+  )
+   extends Value
 
   type ISOCountry = EnumVal
   // format: OFF
@@ -285,8 +284,8 @@ object ISOCountry extends Enum {
     */
   def apply(countryCode: String): ISOCountry =
     ISOCountry.values.find(countryCode == _.toString) match {
-      case Some(country) ⇒ country
-      case _ ⇒ throw new ParseException(s"Invalid alpha-2 code '$countryCode' for ISOCountry")
+      case Some(country) => country
+      case _ => throw new ParseException(s"Invalid alpha-2 code '$countryCode' for ISOCountry")
     }
 
   /**
@@ -308,8 +307,8 @@ object ISOCountry extends Enum {
     */
   def apply(numericCode: Int): ISOCountry =
     ISOCountry.values.find(numericCode == _.numericalCode) match {
-      case Some(country) ⇒ country
-      case _ ⇒ throw new ParseException(s"Invalid numeric code '$numericCode' for ISOCountry")
+      case Some(country) => country
+      case _ => throw new ParseException(s"Invalid numeric code '$numericCode' for ISOCountry")
     }
 
   /**
@@ -331,4 +330,5 @@ object ISOCountry extends Enum {
     */
   def fromContinent(continent: ISOContinent): Vector[ISOCountry] =
     ISOCountry.values.filter(_.continent == continent)
+
 }

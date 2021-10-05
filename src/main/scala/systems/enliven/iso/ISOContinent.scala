@@ -25,8 +25,8 @@ object ISOContinent extends Enum {
     */
   def apply(continentCode: String): ISOContinent =
     ISOContinent.values.find(continentCode == _.toString) match {
-      case Some(continent) ⇒ continent
-      case _ ⇒
+      case Some(continent) => continent
+      case _ =>
         throw new ParseException(s"Invalid value '$continentCode' for ISOContinent")
     }
 
@@ -39,4 +39,5 @@ object ISOContinent extends Enum {
     */
   def from(continentCode: String): Option[ISOContinent] =
     ISOContinent.values.find(continentCode == _.toString)
+
 }

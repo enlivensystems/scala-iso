@@ -11,10 +11,11 @@ import systems.enliven.iso.ISOCountry.ISOCountry
 object CountryCallingCode extends Enum {
 
   sealed class EnumVal(
-      val value: String,
-      val numericalCode: Int,
-      val countries: ISOCountry*
-  ) extends Value
+    val value: String,
+    val numericalCode: Int,
+    val countries: ISOCountry*
+  )
+   extends Value
 
   type CountryCallingCode = EnumVal
   // format: OFF
@@ -284,8 +285,8 @@ object CountryCallingCode extends Enum {
     */
   def apply(phoneCode: String): CountryCallingCode =
     CountryCallingCode.values.find(phoneCode == _.toString) match {
-      case Some(code) ⇒ code
-      case None ⇒ throw new ParseException(s"Invalid value '$phoneCode' for CountryCallingCode")
+      case Some(code) => code
+      case None => throw new ParseException(s"Invalid value '$phoneCode' for CountryCallingCode")
     }
 
   /**
@@ -306,9 +307,11 @@ object CountryCallingCode extends Enum {
     */
   def apply(numericalCode: Int): CountryCallingCode =
     CountryCallingCode.values.find(numericalCode == _.numericalCode) match {
-      case Some(country) ⇒ country
-      case _ ⇒
-        throw new ParseException(s"Invalid country calling code '$numericalCode' for CountryCallingCode")
+      case Some(country) => country
+      case _ =>
+        throw new ParseException(
+          s"Invalid country calling code '$numericalCode' for CountryCallingCode"
+        )
     }
 
   /**
@@ -330,8 +333,8 @@ object CountryCallingCode extends Enum {
     */
   def apply(country: ISOCountry): CountryCallingCode =
     CountryCallingCode.values.find(_.countries.contains(country)) match {
-      case Some(currency) ⇒ currency
-      case _ ⇒ throw new ParseException(s"Invalid country '$country' for CountryCallingCode")
+      case Some(currency) => currency
+      case _ => throw new ParseException(s"Invalid country '$country' for CountryCallingCode")
     }
 
   /**
@@ -343,4 +346,5 @@ object CountryCallingCode extends Enum {
     */
   def from(country: ISOCountry): Option[CountryCallingCode] =
     CountryCallingCode.values.find(_.countries.contains(country))
+
 }

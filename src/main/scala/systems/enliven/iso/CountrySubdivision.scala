@@ -11,18 +11,19 @@ import systems.enliven.iso.ISOCountry.ISOCountry
   */
 trait CountrySubdivision extends Enum {
 
-  sealed class EnumVal(val country: ISOCountry, val subdivisionName: String, val value: String) extends Value
+  sealed class EnumVal(val country: ISOCountry, val subdivisionName: String, val value: String)
+   extends Value
 
   type ISOCountrySubdivision = EnumVal
 }
 
 object ISOCountrySubdivision
-    extends ISOCountrySubdivisionAfrica
-    with ISOCountrySubdivisionAsia
-    with ISOCountrySubdivisionEurope
-    with ISOCountrySubdivisionNorthAmerica
-    with ISOCountrySubdivisionSouthAmerica
-    with ISOCountrySubdivisionOceania {
+ extends ISOCountrySubdivisionAfrica
+   with ISOCountrySubdivisionAsia
+   with ISOCountrySubdivisionEurope
+   with ISOCountrySubdivisionNorthAmerica
+   with ISOCountrySubdivisionSouthAmerica
+   with ISOCountrySubdivisionOceania {
 
   /**
     * Retrieves ISOCountrySubdivision based on 3166-2 xx-xx code.
@@ -33,8 +34,10 @@ object ISOCountrySubdivision
     */
   def apply(subdivisionCode: String): ISOCountrySubdivision =
     ISOCountrySubdivision.values.find(subdivisionCode == _.toString) match {
-      case Some(country) ⇒ country
-      case None ⇒ throw new ParseException(s"Invalid 3166-2 code '$subdivisionCode' for ISOCountrySubdivision")
+      case Some(country) => country
+      case None => throw new ParseException(
+          s"Invalid 3166-2 code '$subdivisionCode' for ISOCountrySubdivision"
+        )
     }
 
   /**
@@ -56,4 +59,5 @@ object ISOCountrySubdivision
     */
   def fromCountry(country: ISOCountry): Vector[ISOCountrySubdivision] =
     ISOCountrySubdivision.values.filter(_.country == country)
+
 }
