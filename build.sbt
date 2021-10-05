@@ -1,10 +1,11 @@
-import sbt.Tests.{ Group, SubProcess }
+import sbt.Tests.{Group, SubProcess}
 import sbtrelease.ReleaseStateTransformations._
-import sbtrelease.{ versionFormatError, Version }
+import sbtrelease.{versionFormatError, Version}
 
 makePomConfiguration := makePomConfiguration.value.withConfigurations(
   Configurations.defaultMavenConfigurations
 )
+
 lazy val commonSettings = Seq(
   startYear := Some(2021),
   headerMappings := headerMappings.value + (HeaderFileType.scala -> HeaderCommentStyle.cStyleBlockComment),
@@ -50,20 +51,23 @@ lazy val commonSettings = Seq(
     "-deprecation",
     "-feature",
     "-unchecked",
+    "-Ywarn-unused",
     "-language:implicitConversions",
     "-language:postfixOps"
   ),
   releaseVersionBump := sbtrelease.Version.Bump.Next,
   releaseIgnoreUntrackedFiles := true,
-  releaseVersion := { ver =>
-    Version(ver)
-      .map(_.withoutQualifier.string)
-      .getOrElse(versionFormatError(ver))
+  releaseVersion := {
+    ver =>
+      Version(ver)
+        .map(_.withoutQualifier.string)
+        .getOrElse(versionFormatError(ver))
   },
-  releaseNextVersion := { ver =>
-    Version(ver)
-      .map(_.bump(releaseVersionBump.value).withoutQualifier.string)
-      .getOrElse(versionFormatError(ver))
+  releaseNextVersion := {
+    ver =>
+      Version(ver)
+        .map(_.bump(releaseVersionBump.value).withoutQualifier.string)
+        .getOrElse(versionFormatError(ver))
   },
   releaseProcess := Seq[ReleaseStep](
     inquireVersions,
@@ -80,10 +84,11 @@ lazy val commonSettings = Seq(
   IntegrationTest / testForkedParallel := true,
   Global / concurrentRestrictions := Seq(Tags.limitAll(6)),
   Test / parallelExecution := true,
-  Test / testGrouping := (Test / testGrouping).value.flatMap { group =>
-    group.tests.map(
-      test => Group(test.name, Seq(test), SubProcess(ForkOptions()))
-    )
+  Test / testGrouping := (Test / testGrouping).value.flatMap {
+    group =>
+      group.tests.map(
+        test => Group(test.name, Seq(test), SubProcess(ForkOptions()))
+      )
   },
   concurrentRestrictions := Seq(Tags.limit(Tags.ForkedTestGroup, 6)),
   Test / logLevel := Level.Info,
@@ -101,7 +106,7 @@ lazy val commonSettings = Seq(
       System.setProperty(
         "log4j.configuration",
         s"file:///${baseDirectory.value.getAbsolutePath}/../common/src/test/resources/log4j2.properties"
-    )
+      )
   ),
   Test / packageBin / publishArtifact := true,
   Test / packageSrc / publishArtifact := true,
