@@ -14,6 +14,12 @@ but made available for Scala 2.13+.
 To get started with SBT, simply add the following to your `build.sbt` or `Build.scala` file:
 
 ``` scala   
+resolvers ++= Seq(
+    "Artifactory Realm".at(s"https://central.enliven.systems/artifactory/sbt-release/")
+)
+```
+
+``` scala   
 libraryDependencies += "systems.enliven" %% "scala-iso" % "0.2.0"
 ```
 
