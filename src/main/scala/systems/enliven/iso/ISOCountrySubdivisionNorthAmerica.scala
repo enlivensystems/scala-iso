@@ -332,4 +332,5 @@ trait ISOCountrySubdivisionNorthAmerica extends CountrySubdivision {
     val `Saint George`                               = new ISOCountrySubdivision(ISOCountry.SAINT_VINCENT_AND_THE_GRENADINES, "Saint George", "VC-04")
   // format: ON
 }
+
 object ISOCountrySubdivisionNorthAmerica extends ISOCountrySubdivisionNorthAmerica

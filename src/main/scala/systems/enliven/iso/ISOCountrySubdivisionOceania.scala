@@ -122,4 +122,5 @@ trait ISOCountrySubdivisionOceania extends CountrySubdivision {
   val `Tuamasaga`                    = new ISOCountrySubdivision(ISOCountry.SAMOA, "Tuamasaga", "WS-TU")
   // format: ON
 }
+
 object ISOCountrySubdivisionOceania extends ISOCountrySubdivisionOceania

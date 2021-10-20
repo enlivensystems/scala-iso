@@ -869,4 +869,5 @@ trait ISOCountrySubdivisionAfrica extends CountrySubdivision {
   val `Midlands`                                 = new ISOCountrySubdivision(ISOCountry.ZIMBABWE, "Midlands", "ZW-MI")
   // format: ON
 }
+
 object ISOCountrySubdivisionAfrica extends ISOCountrySubdivisionAfrica

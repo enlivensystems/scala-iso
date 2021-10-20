@@ -1055,4 +1055,5 @@ trait ISOCountrySubdivisionAsia extends CountrySubdivision {
   val `Ta'izz`                                   = new ISOCountrySubdivision(ISOCountry.YEMEN, "Ta'izz", "YE-TA")
   // format: ON
 }
+
 object ISOCountrySubdivisionAsia extends ISOCountrySubdivisionAsia

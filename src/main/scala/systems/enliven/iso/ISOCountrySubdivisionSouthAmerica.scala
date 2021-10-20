@@ -244,4 +244,5 @@ trait ISOCountrySubdivisionSouthAmerica extends CountrySubdivision {
   val `Treinta y Tres`                           = new ISOCountrySubdivision(ISOCountry.URUGUAY, "Treinta y Tres", "UY-TT")
   // format: ON
 }
+
 object ISOCountrySubdivisionSouthAmerica extends ISOCountrySubdivisionSouthAmerica
