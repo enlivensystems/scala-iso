@@ -867,4 +867,5 @@ trait ISOCountrySubdivisionEurope extends CountrySubdivision {
   val `Zhytomyrs'ka Oblast'`                       = new ISOCountrySubdivision(ISOCountry.UKRAINE, "Zhytomyrs'ka Oblast'", "UA-18")
   // format: ON
 }
+
 object ISOCountrySubdivisionEurope extends ISOCountrySubdivisionEurope
