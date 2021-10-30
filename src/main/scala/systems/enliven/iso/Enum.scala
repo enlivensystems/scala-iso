@@ -2,15 +2,15 @@ package systems.enliven.iso
 
 //Slightly adapted from https://gist.github.com/d6y/376f1a4b178c343ff415
 trait Enum {
-  //DIY enum type
+  // DIY enum type
   import java.util.concurrent.atomic.AtomicReference
-  //Concurrency paranoia
+  // Concurrency paranoia
 
-  type EnumVal <: Value //This is a type that needs to be found in the implementing class
+  type EnumVal <: Value // This is a type that needs to be found in the implementing class
 
-  private val _values = new AtomicReference(Vector[EnumVal]()) //Stores our enum values
+  private val _values = new AtomicReference(Vector[EnumVal]()) // Stores our enum values
 
-  //Adds an EnumVal to our storage, uses CCAS to make sure it's thread safe, returns the ordinal
+  // Adds an EnumVal to our storage, uses CCAS to make sure it's thread safe, returns the ordinal
   final private def addEnumVal(newVal: EnumVal): Int = {
     import _values.{compareAndSet, get}
     val oldVec = get
@@ -22,21 +22,21 @@ trait Enum {
 
   def values: Vector[EnumVal] = _values.get
 
-  //Here you can get all the enums that exist for this type
+  // Here you can get all the enums that exist for this type
 
-  //This is the trait that we need to extend our EnumVal type with, it does the book-keeping for us
+  // This is the trait that we need to extend our EnumVal type with, it does the book-keeping for us
   protected trait Value extends Ordered[Value] {
     self: EnumVal =>
-    //Enforce that no one mixes in Value in a non-EnumVal type
-    final val ordinal = addEnumVal(this) //Adds the EnumVal and returns the ordinal
+    // Enforce that no one mixes in Value in a non-EnumVal type
+    final val ordinal = addEnumVal(this) // Adds the EnumVal and returns the ordinal
 
     def compare(that: Value): Int = this.ordinal - that.ordinal
 
-    def value: String //All enum values should have a value
+    def value: String // All enum values should have a value
 
     override def toString: String = value
 
-    //And that name is used for the toString operation
+    // And that name is used for the toString operation
     override def equals(other: Any): Boolean = this eq other.asInstanceOf[AnyRef]
 
     override def hashCode: Int = 31 * (this.getClass.## + value.## + ordinal)
