@@ -113,9 +113,9 @@ lazy val commonSettings = Seq(
   Test / packageSrc / publishArtifact := true,
   Compile / packageDoc / publishArtifact := false,
   libraryDependencies ++= Seq(
-    "org.scala-lang" % "scala-library" % "2.13.6",
-    "org.scala-lang" % "scala-compiler" % "2.13.6",
-    "org.scala-lang" % "scala-reflect" % "2.13.6",
+    "org.scala-lang" % "scala-library" % "2.13.7",
+    "org.scala-lang" % "scala-compiler" % "2.13.7",
+    "org.scala-lang" % "scala-reflect" % "2.13.7",
     "org.scalacheck" %% "scalacheck" % "1.15.4",
     "org.scalatest" %% "scalatest" % "3.3.0-SNAP3" % "test"
   )
