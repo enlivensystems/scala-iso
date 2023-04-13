@@ -117,7 +117,7 @@ lazy val commonSettings = Seq(
     "org.scala-lang" % "scala-compiler" % "2.13.10",
     "org.scala-lang" % "scala-reflect" % "2.13.10",
     "org.scalacheck" %% "scalacheck" % "1.17.0",
-    "org.scalatest" %% "scalatest" % "3.3.0-SNAP3" % "test"
+    "org.scalatest" %% "scalatest" % "3.3.0-SNAP4" % "test"
   )
 )
 
